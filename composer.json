@@ -1,0 +1,15 @@
+{
+    "require": {
+        "j4mie/idiorm": "dev-master",
+        "codeguy/upload": "dev-master",
+        "klein/klein": "dev-master",
+        "kartik-v/bootstrap-fileinput": "dev-master"
+    },
+    "autoload": {
+      "psr-4": {
+        "Sitio\\": "Sitio",
+        "System\\": "System",
+        "Config\\": "Config"
+      }
+    }
+}

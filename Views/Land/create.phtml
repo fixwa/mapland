@@ -1,0 +1,29 @@
+
+
+<form action="" method="post" enctype="multipart/form-data">
+
+    <p>Title: <input type="text" name="title"/></p>
+
+    <p>Precio: <input type="text" name="price"/></p>
+
+    <p>Dimensiones: <input type="text" name="square_meters"/></p>
+
+    <p>Descripcion: <textarea type="text" name="description"></textarea></p>
+
+    <input id="input-700" name="images[]" type="file" multiple class="file-loading">
+
+    <input type="submit" value="Guardar" />
+</form>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#input-700").fileinput({
+            uploadUrl: "/land/uploadImage", // server upload action
+            uploadAsync: true,
+            maxFileCount: 5
+        });
+    });
+
+
+</script>

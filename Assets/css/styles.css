@@ -1,0 +1,16 @@
+.horizontal-menu ul li {
+    display: inline;
+    padding: 2px 7px; /*Separar el texto*/
+    margin:5px; /* Separar los botones */
+    background-color:#E4E4E4; /* Color de fondo */
+}
+.horizontal-menu ul li:hover {
+    background-color:#CCCCCC; /* Color de fondo sobre el boton */
+    cursor: pointer; /* cambiar el aspecto del puntero */
+}
+.horizontal-menu ul {
+    /* Linea para delimitar la botonera */
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #E4E4E4;
+}

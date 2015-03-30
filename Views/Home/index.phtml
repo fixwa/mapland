@@ -1,0 +1,139 @@
+
+<script type="text/javascript">
+    var map;
+
+    // Update position
+    $(document).on('submit', '.edit_marker', function(e) {
+        e.preventDefault();
+
+        var $index = $(this).data('marker-index');
+
+        $lat = $('#marker_' + $index + '_lat').val();
+        $lng = $('#marker_' + $index + '_lng').val();
+
+        var template = $('#edit_marker_template').text();
+
+        // Update form values
+        var content = template.replace(/{{index}}/g, $index).replace(/{{lat}}/g, $lat).replace(/{{lng}}/g, $lng);
+
+        map.markers[$index].setPosition(new google.maps.LatLng($lat, $lng));
+        map.markers[$index].infoWindow.setContent(content);
+
+        $marker = $('#markers-with-coordinates').find('li').eq(0).find('a');
+        $marker.data('marker-lat', $lat);
+        $marker.data('marker-lng', $lng);
+    });
+
+    // Update center
+    $(document).on('click', '.pan-to-marker', function(e) {
+        e.preventDefault();
+
+        var lat, lng;
+
+        var $index = $(this).data('marker-index');
+        var $lat = $(this).data('marker-lat');
+        var $lng = $(this).data('marker-lng');
+
+        if ($index != undefined) {
+            // using indices
+            var position = map.markers[$index].getPosition();
+            lat = position.lat();
+            lng = position.lng();
+        }
+        else {
+            // using coordinates
+            lat = $lat;
+            lng = $lng;
+        }
+
+        map.setCenter(lat, lng);
+    });
+
+    $(document).ready(function(){
+        map = new GMaps({
+            div: '#map',
+            lat: -34.603978,
+            lng: -58.386560,
+            zoom: 13
+        });
+
+        var viewTemplate = $('#view_marker_template').text();
+
+<?php
+foreach ($allLands as $land):
+    if (empty($land->latitude) || empty($land->latitude)) {
+        continue;
+    }
+?>
+    var viewContent = viewTemplate.replace(/{{id}}/g, <?php echo $land->id; ?>);
+
+    map.addMarker({
+        lat: <?php echo $land->latitude; ?>,
+        lng: <?php echo $land->longitude; ?>,
+        title: "<?php echo $land->title; ?>",
+        infoWindow: {
+            content : viewContent
+        }
+//            click: function(e) {
+//                console.log(viewTemplate); //alert('You clicked in this marker');
+//            }
+    });
+
+<?php endforeach; ?>
+
+        GMaps.on('marker_added', map, function(marker) {
+            $('#markers-with-index').append('<li><a href="#" class="pan-to-marker" data-marker-index="' + map.markers.indexOf(marker) + '">' + marker.title + '</a></li>');
+
+            $('#markers-with-coordinates').append('<li><a href="#" class="pan-to-marker" data-marker-lat="' + marker.getPosition().lat() + '" data-marker-lng="' + marker.getPosition().lng() + '">' + marker.title + '</a></li>');
+        });
+
+        GMaps.on('click', map.map, function(event) {
+            var index = map.markers.length;
+            var lat = event.latLng.lat();
+            var lng = event.latLng.lng();
+
+            var template = $('#edit_marker_template').text();
+
+            var content = template.replace(/{{index}}/g, index).replace(/{{lat}}/g, lat).replace(/{{lng}}/g, lng);
+
+            map.addMarker({
+                lat: lat,
+                lng: lng,
+                title: 'Marker #' + index,
+                infoWindow: {
+                    content : content
+                }
+            });
+        });
+    });
+
+
+</script>
+
+<div id="map"></div>
+
+
+<script type="text/html" id="edit_marker_template">
+
+
+    <h4><a href="/land/create?lat={{lat}}&lng={{lng}}">Agregar un terreno aqui</a></h4>
+    <h4>Edit Marker</h4>
+        </p>
+        <p>
+            <label for="marker_{{index}}_lng">Longitude:</label>
+            <input type="text" id="marker_{{index}}_lng" value="{{lng}}" />
+        </p>
+        <input type="submit" value="Update position" />
+    </form>    <form class="edit_marker" action="#" method="post" data-marker-index="{{index}}">
+        <p>
+            <label for="marker_{{index}}_lat">Latitude:</label>
+            <input type="text" id="marker_{{index}}_lat" value="{{lat}}" />
+
+</script>
+
+<script type="text/html" id="view_marker_template">
+
+
+    <h4><a href="/land/view/{{id}}">Ver</a></h4>
+
+</script>
