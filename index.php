@@ -53,14 +53,6 @@ $klein->respond(['POST', 'GET'], '/[:class]/[:action]', function (\Klein\Request
     return;
 });
 
-
-
-
-$klein->respond('GET', '/hello-world', function (\Klein\Request $request) {
-    return 'Hello World!';
-});
-
-
 $klein->respond('GET', '/', function (\Klein\Request $request) {
     $request->class = 'Home';
     $request->action = 'index';
@@ -68,11 +60,6 @@ $klein->respond('GET', '/', function (\Klein\Request $request) {
     $class = new Sitio\Home();
     $class->request($request);
     return $class->index();
-});
-$klein->respond('GET', '/logout', function (\Klein\Request $request) {
-    $class = new Sitio\Login();
-    $class->request($request);
-    return $class->logout();
 });
 
 $klein->dispatch();

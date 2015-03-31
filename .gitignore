@@ -7,3 +7,5 @@ vendor/
 
 Assets/Uploads
 .idea/
+
+composer.lock

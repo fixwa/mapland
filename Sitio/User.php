@@ -53,4 +53,38 @@ class User extends BaseController
             }
         }
     }
+
+    public function logout()
+    {
+        @session_start();
+        session_unset();
+        session_destroy();
+        header('Location: /');
+        exit();
+    }
+
+    /**
+     *
+     */
+    public function login()
+    {
+        if (!empty($_POST))
+        {
+            $user = $this->users->getByEmailAndPassword($_POST['email'], $_POST['password']);
+
+            if (false !== $user) {
+                session_start();
+                $_SESSION['id']   = $user->id;
+                $_SESSION['name'] = $user->name;
+                $_SESSION['email'] = $user->email;
+
+                $_SESSION['flashMessage'] = 'Conectado al sistema.';
+
+                header('Location: /panel');
+                exit();
+            } else {
+                $_SESSION['flashMessage'] = 'No se puede iniciar su sesión.';
+            }
+        }
+    }
 }
