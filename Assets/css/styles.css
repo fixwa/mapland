@@ -14,3 +14,14 @@
     border-bottom-style: solid;
     border-bottom-color: #E4E4E4;
 }
+
+/* help box layout */
+
+.helpbox {
+    margin-top: 50px;
+}
+.helpbox .col-xs-6 {
+    margin-bottom: 20px;
+    text-align: center;
+    border: 1px solid red;
+}
