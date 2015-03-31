@@ -24,9 +24,9 @@
     <li><a href="/user/register">Registro</a></li>
     <li>
         <?php if (isset($_SESSION['id'])) { ?>
-            <a href="/logout">Logout</a>
+            <a href="/user/logout">Logout</a>
         <?php } else { ?>
-            <a href="/login">Login</a>
+            <a href="/user/login">Login</a>
         <?php }?>
     </li>
 

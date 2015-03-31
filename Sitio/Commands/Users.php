@@ -52,4 +52,12 @@ class Users
 
         $user->save();
     }
+
+
+    public function getByEmailAndPassword($email, $password)
+    {
+        return \ORM::forTable('users')
+            ->where_raw('(`email` = ? AND `password` = ?)', array($_POST['email'], $_POST['password']))
+            ->findOne();
+    }
 }
