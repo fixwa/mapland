@@ -1,3 +1,11 @@
-<h2><?php echo $this->land->title; ?></h2>
+<h2><?php echo $land->title; ?></h2>
 
-<p><?php echo $this->land->description; ?></p>
+<p><?php echo $land->description; ?></p>
+
+<?php
+
+foreach ($land->images as $image) {
+    echo '<img src="' . $image->url . '" alt="" height="200" />';
+}
+
+?>

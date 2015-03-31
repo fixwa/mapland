@@ -2,6 +2,7 @@
 namespace Sitio;
 
 use Sitio\Commands\Lands;
+use Sitio\Commands\LandsImages;
 use System\BaseController;
 use UnexpectedValueException;
 
@@ -13,6 +14,11 @@ class Land extends BaseController
     protected $lands;
 
     /**
+     * @var LandsImages
+     */
+    protected $landsImages;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -20,6 +26,8 @@ class Land extends BaseController
         parent::__construct();
 
         $this->lands = new Lands();
+
+        $this->landsImages = new LandsImages();
     }
 
     /**
@@ -45,7 +53,7 @@ class Land extends BaseController
     public function view($id)
     {
 
-        $this->land = $this->lands->find($id);
+        $this->view->land = $this->lands->find($id);
     }
 
     /**
@@ -53,6 +61,8 @@ class Land extends BaseController
      */
     public function create()
     {
+        $tempId = $this->tempId(true);
+
         if (!empty($_POST)) {
 
             $land = null;
@@ -63,6 +73,8 @@ class Land extends BaseController
             }
 
             if (is_numeric($land)) {
+
+                $this->landsImages->updateTemporary((int) $land, $tempId);
                 header('Location: /land/view/' . (int) $land);
                 exit;
             }
@@ -74,8 +86,14 @@ class Land extends BaseController
     {
         $this->view->disableView();
 
+        $baseDir   = '/Assets/Uploads/Lands/' . $_SESSION['id'] . '/';
+        $uploadDir = __DIR__ . '/..' . $baseDir;
 
-        $storage = new \Upload\Storage\FileSystem(__DIR__ . '/../Assets/Uploads/');
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $storage = new \Upload\Storage\FileSystem($uploadDir);
         $file = new \Upload\File('images', $storage);
 
         // Optionally you can rename the file on upload
@@ -85,14 +103,11 @@ class Land extends BaseController
         // Validate file upload
         // MimeType List => http://www.webmaster-toolkit.com/mime-types.shtml
         $file->addValidations(array(
-            // Ensure file is of type "image/png"
-            new \Upload\Validation\Mimetype('image/png'),
-
-            //You can also add multi mimetype validation
-            //new \Upload\Validation\Mimetype(array('image/png', 'image/gif'))
+            // Ensure filetype
+            new \Upload\Validation\Mimetype(['image/png', 'image/pjpeg', 'image/jpeg', 'image/gif']),
 
             // Ensure file is no larger than 5M (use "B", "K", M", or "G")
-            new \Upload\Validation\Size('5M')
+            new \Upload\Validation\Size('15M')
         ));
 
         // Access data about the file that has been uploaded
@@ -102,16 +117,26 @@ class Land extends BaseController
             'mime'       => $file->getMimetype(),
             'size'       => $file->getSize(),
             'md5'        => $file->getMd5(),
-            'dimensions' => $file->getDimensions()
+            'dimensions' => $file->getDimensions(),
+            'uploadDir'  => $uploadDir,
+            'baseDir'    => $baseDir,
+            'tempId'     => $this->tempId(),
         );
 
         // Try to upload file
-        try {
-            // Success!
-            $file->upload();
-        } catch (\Exception $e) {
-            // Fail!
-            $errors = $file->getErrors();
+
+        $file->upload();
+
+        $this->landsImages->create($data);
+
+    }
+
+    private function tempId($regenerate = false)
+    {
+        if ($regenerate) {
+            $_SESSION['temp-id'] = uniqid($_SESSION['id'] . '_');
         }
+
+        return $_SESSION['temp-id'];
     }
 }
