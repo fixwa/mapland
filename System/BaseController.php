@@ -6,10 +6,19 @@ use Klein\Request;
 
 class BaseController
 {
-    private $renderCalled = false;
+    /**
+     * @var bool
+     */
+    protected $renderCalled = false;
 
+    /**
+     * @var Request
+     */
     protected $request;
 
+    /**
+     * @var View
+     */
     public $view;
 
     public function __construct()
@@ -48,6 +57,17 @@ class BaseController
 //        }
 //
 //        $this->render('footer.phtml');
+    }
+
+    protected function requireLogin()
+    {
+        $destination = urlencode($this->request->uri());
+
+        //@session_start();
+        if (empty($_SESSION['id'])) {
+            header('Location: /user/login?destination=' . $destination);
+            exit();
+        }
     }
 
     /**

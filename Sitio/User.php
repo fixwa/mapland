@@ -80,7 +80,11 @@ class User extends BaseController
 
                 $_SESSION['flashMessage'] = 'Conectado al sistema.';
 
-                header('Location: /panel');
+                $destination = '/panel';
+                if (!empty($_GET['destination'])) {
+                    $destination = urldecode($_GET['destination']);
+                }
+                header('Location: ' . $destination);
                 exit();
             } else {
                 $_SESSION['flashMessage'] = 'No se puede iniciar su sesión.';
