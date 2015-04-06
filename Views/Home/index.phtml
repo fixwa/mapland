@@ -57,6 +57,23 @@
             zoom: 13
         });
 
+        /* ---Geolocation--- */
+        GMaps.geolocate({
+            success: function(position) {
+                map.setCenter(position.coords.latitude, position.coords.longitude);
+            },
+            error: function(error) {
+                //alert('Geolocation failed: '+error.message);
+            },
+            not_supported: function() {
+                //alert("Your browser does not support geolocation");
+            },
+            always: function() {
+                //alert("Done!");
+            }
+        })
+        /* ---Geolocation--- */
+
         var viewTemplate = $('#view_marker_template').text();
 
 <?php
@@ -74,9 +91,6 @@ foreach ($allLands as $land):
         infoWindow: {
             content : viewContent
         }
-//            click: function(e) {
-//                console.log(viewTemplate); //alert('You clicked in this marker');
-//            }
     });
 
 <?php endforeach; ?>
