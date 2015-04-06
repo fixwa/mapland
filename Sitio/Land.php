@@ -61,6 +61,8 @@ class Land extends BaseController
      */
     public function create()
     {
+        $this->requireLogin();
+
         $tempId = $this->tempId(true);
 
         if (!empty($_POST)) {
