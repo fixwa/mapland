@@ -3,7 +3,7 @@ require 'vendor/autoload.php';
 
 /* @see https://github.com/chriso/klein.php */
 $klein = new \Klein\Klein();
-
+\Sitio\User::startSession();
 
 $klein->respond('/[:class]', function (\Klein\Request $request) {
 

@@ -16,8 +16,6 @@ class BaseController
     {
         $db = new Database();
 
-        $this->startSession();
-
         $this->view = new View($this);
 
 //        $this->render('Layout.phtml');
@@ -75,25 +73,5 @@ class BaseController
     {
         $this->renderCalled = true;
         include __DIR__ . '/../Views/' . $file;
-    }
-
-    protected function startSession()
-    {
-        if (!isset($_SESSION)) {
-            session_start();
-        }
-
-        if (
-            isset($_SESSION['REMOTE_ADDR'])
-            && $_SESSION['REMOTE_ADDR']
-            != $_SERVER['REMOTE_ADDR']
-        ) {
-            session_regenerate_id();
-            $_SESSION['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
-        }
-
-        if (!isset($_SESSION['REMOTE_ADDR'])) {
-            $_SESSION['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
-        }
     }
 }
