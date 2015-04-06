@@ -61,8 +61,6 @@ class Land extends BaseController
      */
     public function create()
     {
-        $tempId = $this->tempId(true);
-
         if (!empty($_POST)) {
 
             $land = null;
@@ -74,11 +72,13 @@ class Land extends BaseController
 
             if (is_numeric($land)) {
 
-                $this->landsImages->updateTemporary((int) $land, $tempId);
+                $this->landsImages->updateTemporary((int) $land, $this->tempId());
                 header('Location: /land/view/' . (int) $land);
                 exit;
             }
         }
+
+        $tempId = $this->tempId(true);
     }
 
 
